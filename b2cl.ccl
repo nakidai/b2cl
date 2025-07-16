@@ -1,0 +1,151 @@
+/usr/bin/env 3cl "$0"; exit
+
+\
+	This procedure loads ASCII codes of tokens of ccl onto the stack
+\
+S/etup tokens / -- ascii-code ...
+{
+	&x / for duplicating
+
+	\ '!' \   ^    +++++++++++++++++++++++++++++++++
+	\ '#' \ =x$x$x ++
+	\ '$' \ =x$x$x +
+	\ '%' \ =x$x$x +
+	\ '&' \ =x$x$x +
+	\ '(' \ =x$x$x ++
+	\ ')' \ =x$x$x +
+	\ '*' \ =x$x$x +
+	\ '+' \ =x$x$x +
+	\ '-' \ =x$x$x ++
+	\ ':' \ =x$x$x +++++++++++++
+	\ ';' \ =x$x$x +
+	\ '<' \ =x$x$x +
+	\ '=' \ =x$x$x +
+	\ '>' \ =x$x$x +
+	\ '?' \ =x$x$x +
+	\ '@' \ =x$x$x +
+	\ 'A' \ =x$x$x +
+	\ 'B' \ =x$x$x +
+	\ 'C' \ =x$x$x +
+	\ 'D' \ =x$x$x +
+	\ 'E' \ =x$x$x +
+	\ 'F' \ =x$x$x +
+	\ 'G' \ =x$x$x +
+	\ 'H' \ =x$x$x +
+	\ 'I' \ =x$x$x +
+	\ 'J' \ =x$x$x +
+	\ 'K' \ =x$x$x +
+	\ 'L' \ =x$x$x +
+	\ 'M' \ =x$x$x +
+	\ 'N' \ =x$x$x +
+	\ 'O' \ =x$x$x +
+	\ 'P' \ =x$x$x +
+	\ 'Q' \ =x$x$x +
+	\ 'R' \ =x$x$x +
+	\ 'S' \ =x$x$x +
+	\ 'T' \ =x$x$x +
+	\ 'U' \ =x$x$x +
+	\ 'V' \ =x$x$x +
+	\ 'W' \ =x$x$x +
+	\ 'X' \ =x$x$x +
+	\ 'Y' \ =x$x$x +
+	\ 'Z' \ =x$x$x +
+	\ '[' \ =x$x$x +
+	\ ']' \ =x$x$x ++
+	\ '^' \ =x$x$x +
+	\ '_' \ =x$x$x +
+	\ 'a' \ =x$x$x ++
+	\ 'b' \ =x$x$x +
+	\ 'c' \ =x$x$x +
+	\ 'd' \ =x$x$x +
+	\ 'e' \ =x$x$x +
+	\ 'f' \ =x$x$x +
+	\ 'g' \ =x$x$x +
+	\ 'h' \ =x$x$x +
+	\ 'i' \ =x$x$x +
+	\ 'j' \ =x$x$x +
+	\ 'k' \ =x$x$x +
+	\ 'l' \ =x$x$x +
+	\ 'm' \ =x$x$x +
+	\ 'n' \ =x$x$x +
+	\ 'o' \ =x$x$x +
+	\ 'p' \ =x$x$x +
+	\ 'q' \ =x$x$x +
+	\ 'r' \ =x$x$x +
+	\ 's' \ =x$x$x +
+	\ 't' \ =x$x$x +
+	\ 'u' \ =x$x$x +
+	\ 'v' \ =x$x$x +
+	\ 'w' \ =x$x$x +
+	\ 'x' \ =x$x$x +
+	\ 'y' \ =x$x$x +
+	\ 'z' \ =x$x$x +
+	\ '{' \ =x$x$x +
+	\ '}' \ =x$x$x ++
+	\ '~' \ =x$x$x +
+}
+
+\
+	This procedure reads the code from stdin, strips all unrelated
+	characters and returns an array of tokens on the stack, so the toppest
+	element is the firstest
+
+	Note that since its algorithm this function should be called with empty
+	stack
+
+	TODO: rewrite this function so it won't depend on empty stack
+\
+R/ead / -- token ...
+{
+	&c/har
+	&t/oken
+
+	/ these flags are inverted
+	&o^+=o/neline comment flag
+	&m^+=m/ultiline comment flag
+	&a/ny comment flag
+
+	/ comment char constants
+	&N^++++++++++=N/ewline
+	&S$N$N*$N$N**$N*---=S/lash
+	&B$S$S*--=B/ackslash
+
+	@S
+	&E^-=E$E / -1 is a separator between parsed tokens and token lut
+
+	/ on the loop start top of the stack stores parsed tokens then -1 and
+	/ token lut
+	_ ( / reading until EOF
+		>c
+		^-c?=_#;=_ / exit if EOF
+
+		&e^+=e/ntered - set if not entered block below
+		o[m[ / if not in comment
+			^=e
+			/ check if maybe start of a comment
+			$Sc?$o-=o$a+=a=_#;=_
+			$Bc?$m-=m$a+=a=_#;=_
+
+			$E / push one more separator
+			%_ / now token lut is on the top
+			&f / flag indicating whether char is token or not
+			_ ( / comparing until -1
+				E?#;      / exit on eof
+				c?$f+=f#; / if token then set flag
+				=t%_$t%_  / move entry to another end of stack
+			)
+			/ returning lut back erasing now unneeded -1 from note
+			%_ _ ( E?=_#; =t%_$t%_ )
+
+			f[$c] / if token then push it onto the stack
+		]]
+		e[a[ / if in comment
+			m[$Nc?$o+=o$a-=a;=_] / check if oneline
+			o[$Bc?$m+=m$a-=a;=_] / check if mutliline
+		]]
+	)
+	%_
+	_ ( E?=_#;=_ )
+}
+
+@R/ead

@@ -1,0 +1,17 @@
+B2CL(1)			    General Commands Manual		       B2CL(1)
+
+NAME
+     b2cl - ccl(7) compiler written in itself
+
+SYNOPSIS
+     b2cl < code > compiled
+
+DESCRIPTION
+     b2cl is a compiler of ccl(7) that is written in itself.  It should
+     support all language features.
+
+SEE ALSO
+     ccl(7), 3cl(1) interpreter written in C to bootstrap is available here:
+     https://git.nakidai.ru/3cl
+
+Linux 6.14.7-arch2-1		 July 16, 2025		  Linux 6.14.7-arch2-1
