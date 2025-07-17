@@ -148,4 +148,76 @@ R/ead / -- token ...
 	_ ( E?=_#;=_ )
 }
 
-@R/ead
+\
+	This function reads stack until EOP (end of parsing) with tokens and
+	prints compiled text to stdout
+\
+P/arse loop / EOP token ... EOP --
+{
+	&t/oken
+	&e=e/nd
+	_ (
+		\ EOP \ e?=_#;
+		\ '^' \ T?@t#;
+		\ '+' \ I?@i#;
+		\ '-' \ J?@j#;
+		\ '*' \ H?@h#;
+		\ '~' \ X?@x#;
+		\ '#' \ B?@b#;
+		\ ':' \ K?@k#;
+		\ '%' \ D?@d#;
+		\ '=' \ N?@n#;
+		\ '!' \ A?@a#;
+		\ '$' \ C?@c#;
+		\ '&' \ E?@e#;
+		\ '<' \ M?@m#;
+		\ '>' \ O?@o#;
+		\ '@' \ Q?@q#;
+		/ Otherwise we've got a parameter for a block instruction
+		/   (or any of other 8 tokens which is an error b2cl doesn't
+		/    handle rn)
+		/ Maybe it's better to not consume EOP so caller can check for
+		/ errors that way
+		@B/lock
+	)
+}
+
+\
+	Main function for compiling. Takes full stack
+\
+C/ompile / token ... --
+{
+	%_^-=E$E%_$E / Insert s
+
+	\ \&x /         Setup instruction names
+	\ '!' \ ^  +++++++++++++++++++++++++++++++++ =A
+	\ '#' \ $A ++                                =B
+	\ '$' \ $B +                                 =C
+	\ '%' \ $C +                                 =D
+	\ '&' \ $D +                                 =E
+	\ '(' \ $E ++                                =F
+	\ ')' \ $F +                                 =G
+	\ '*' \ $G +                                 =H
+	\ '+' \ $H +                                 =I
+	\ '-' \ $I ++                                =J
+	\ ':' \ $J +++++++++++++                     =K
+	\ ';' \ $K +                                 =L
+	\ '<' \ $L +                                 =M
+	\ '=' \ $M +                                 =N
+	\ '>' \ $N +                                 =O
+	\ '?' \ $O +                                 =P
+	\ '@' \ $P +                                 =Q
+	\ '[' \ $Q +++++++++++++++++++++++++++       =R
+	\ ']' \ $R ++                                =S
+	\ '^' \ $S +                                 =T
+	\ '_' \ $T +                                 =U
+	\ '{' \ $U ++++++++++++++++++++++++++++      =V
+	\ '}' \ $V ++                                =W
+	\ '~' \ $W +                                 =X
+
+	/ Emit boilerplate before
+	@P/arse loop
+	/ Emit boilerplate after
+}
+
+@R\ead and then\ @C\ompile\
