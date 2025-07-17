@@ -187,7 +187,7 @@ P/arse loop / EOP token ... EOP --
 \
 C/ompile / token ... --
 {
-	%_^-=E$E%_$E / Insert s
+	%_^-=E$E%_$E / Insert EOP
 
 	\ \&x /         Setup instruction names
 	\ '!' \ ^  +++++++++++++++++++++++++++++++++ =A
